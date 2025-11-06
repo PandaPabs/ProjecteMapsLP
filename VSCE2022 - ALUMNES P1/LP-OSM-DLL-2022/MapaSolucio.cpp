@@ -13,3 +13,7 @@ void MapaSolucio::getPdis(std::vector<PuntDeInteresBase*>& pdis) {
 	PuntDeInteresRestaurantSolucio* r = new PuntDeInteresRestaurantSolucio("El Millor Restaurant", c, true, "regional");
 	pdis.push_back(r);
 }
+void MapaSolucio::getCamins(std::vector<CamiBase*>& pi) {
+	CamiSolucio* caminet = new CamiSolucio;
+	pi.push_back(caminet);
+}

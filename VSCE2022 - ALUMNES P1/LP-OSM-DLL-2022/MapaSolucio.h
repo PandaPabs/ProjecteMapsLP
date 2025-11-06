@@ -9,7 +9,7 @@ public:
 	~MapaSolucio() {}
 
 	void getPdis(std::vector<PuntDeInteresBase*>& pdis) override;
-	virtual void getCamins(std::vector<CamiBase*>&) override {}
+	virtual void getCamins(std::vector<CamiBase*>&) override;
 	virtual void parsejaXmlElements(std::vector<XmlElement>& xmlElements) override {}
 
 private:
