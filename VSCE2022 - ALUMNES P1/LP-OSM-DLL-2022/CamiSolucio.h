@@ -5,11 +5,11 @@
 class CamiSolucio: public CamiBase
 {
 public:
-	CamiSolucio() {}
-	~CamiSolucio() {}
+	CamiSolucio() {};
+	~CamiSolucio() {};
 
 	std::vector<Coordinate> getCamiCoords() override;
-
+	
 private:
 	
 };

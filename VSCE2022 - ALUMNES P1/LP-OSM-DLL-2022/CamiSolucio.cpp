@@ -8,5 +8,7 @@ vector<Coordinate> CamiSolucio::getCamiCoords() {
 	coord.push_back({ 41.4929072, 2.1452474 });
 	coord.push_back({ 41.4933070, 2.1453852 });
 	coord.push_back({ 41.4939882, 2.1456419 });
+	
 	return coord;
 }
+

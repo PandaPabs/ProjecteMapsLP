@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "CamiSolucio.h"
 #include "MapaSolucio.h"
 #include "PuntDeInteresBotigaSolucio.h"
 #include "PuntDeInteresRestaurantSolucio.h"
