@@ -11,6 +11,8 @@ public:
 	}
 	~PuntDeInteresBotigaSolucio() {}
 
+	void setMovReduida(bool movReduida) { m_movReduida = movReduida; }
+
 	string getName() override;
 	unsigned int getColor() override;
 

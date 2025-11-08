@@ -26,5 +26,51 @@ void MapaSolucio::getCamins(std::vector<CamiBase*>& pi) {
 
 void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 {
+	for (int element = 0; element < xmlElements.size(); element++)
+	{
+		if(xmlElements[element].id_element == "node")
+		{
+			int indexTipusPI = 0;
+			while (xmlElements[element].fills[indexTipusPI].second[0].second != "shop" && xmlElements[element].fills[indexTipusPI].second[0].second != "cuisine")
+			{
+				indexTipusPI++;
+			}
 
+			if (xmlElements[element].fills[indexTipusPI].second[0].second == "shop")
+			{
+				PuntDeInteresBotigaSolucio* shop = new PuntDeInteresBotigaSolucio();
+				for (int i = 0; i < xmlElements[element].fills.size(); i++)
+				{
+					if (xmlElements[element].fills[i].second[0].second == "wheelchair")
+					{
+						if (xmlElements[element].fills[i].second[1].second == "yes")
+						{
+							shop->setMovReduida(true);
+						}
+						else
+						{
+							shop->setMovReduida(false);
+						}
+					}
+					//El resto de tipos de hijo
+					
+				}
+				m_puntsInteres.push_back(shop);
+			}
+			else if(xmlElements[element].fills[indexTipusPI].second[0].second == "cuisine")
+			{
+
+				//Al final hay que tener un constructor por parametro de Restaurant.
+			}
+			else
+			{
+				//COMO IDENTIFICO UN CAMI?
+			}
+			
+		}
+		else if (xmlElements[element].id_element == "way")
+		{
+
+		}
+	}
 }
