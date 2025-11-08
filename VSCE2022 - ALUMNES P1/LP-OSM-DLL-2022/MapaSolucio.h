@@ -1,7 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "MapaBase.h"
-#include "CamiBase.h"
+#include "CamiSolucio.h"
 using namespace std;
 
 class MapaSolucio: public MapaBase
@@ -16,6 +16,5 @@ public:
 
 private:
 	vector<PuntDeInteresBase*> m_puntsInteres;
-	vector<CamiBase*> m_camins;
-	vector<vector<CamiBase*>> m_ways; //No se si se hace así o con Coordenadas
+	CamiSolucio m_camins; //El esquema de la pag 14 dice que MapaSolucio contiene un CamiSolucio. Pero entonces no cuadra con la funcion getCamins() :(
 };
