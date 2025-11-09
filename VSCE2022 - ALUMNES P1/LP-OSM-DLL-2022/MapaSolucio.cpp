@@ -3,6 +3,7 @@
 #include "MapaSolucio.h"
 #include "PuntDeInteresBotigaSolucio.h"
 #include "PuntDeInteresRestaurantSolucio.h"
+#include <list>
 
 void MapaSolucio::getPdis(std::vector<PuntDeInteresBase*>& pdis) {
 	//Coordinate c;
@@ -21,11 +22,13 @@ void MapaSolucio::getCamins(std::vector<CamiBase*>& pi) {
 	//CamiSolucio* caminet = new CamiSolucio;
 	//pi.push_back(caminet);
 
-	//pi = m_camins;
+	pi = m_camins;
 }
 
 void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 {
+	std::vector<int> debug;
+	std::vector<pair<string, Coordinate>> auxNodesCami;
 	for (int element = 0; element < xmlElements.size(); element++)
 	{
 		if(xmlElements[element].id_element == "node")
@@ -33,6 +36,7 @@ void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 			//Calculo las Coordenadas
 			double lat;
 			double lon;
+			string id;
 			for (int i = 0; i < xmlElements[element].atributs.size(); i++)
 			{
 				if (xmlElements[element].atributs[i].first == "lat")
@@ -42,6 +46,14 @@ void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 				else if (xmlElements[element].atributs[i].first == "lon")
 				{
 					lon = std::stod(xmlElements[element].atributs[i].second);
+				}
+				else if (xmlElements[element].atributs[i].first == "id")
+				{
+					id = xmlElements[element].atributs[i].second;
+					if (id == "6757996103") //Para depurar
+					{
+						int z = 0;
+					}
 				}
 			}
 			Coordinate coord = { lat, lon };
@@ -78,7 +90,7 @@ void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 
 			if (esCami == true)
 			{
-				m_camins.addCoordenades(coord);
+				auxNodesCami.push_back({id, coord});
 			}
 			else
 			{
@@ -166,7 +178,52 @@ void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 						m_puntsInteres.push_back(new PuntDeInteresRestaurantSolucio(name, coord, movReduida, cuisine));
 					}
 				}
+				else
+				{
+					for (int i = 0; i < xmlElements[element].fills.size(); i++)
+					{
+						if (xmlElements[element].fills[i].first != "#text")
+						{
+							if (xmlElements[element].fills[i].second[0].second == "name")
+							{
+								name = xmlElements[element].fills[i].second[1].second;
+							}
+						}
+					}
+					m_puntsInteres.push_back(new PuntDeInteresBase(coord, name));
+					debug.push_back(element); //Para saber donde estan los elementos que no acaban en la lista
+				}
 			}
+		}
+		else if (xmlElements[element].id_element == "way")
+		{
+			if (element == 3568) //Para depurar
+			{
+				int a = 0;
+			}
+			CamiBase* auxCami = new CamiSolucio();
+			for (int i = 0; i < xmlElements[element].fills.size(); i++)
+			{
+				if (i == 7) //Para depurar
+				{
+					int b = 0;
+				}
+				if (xmlElements[element].fills[i].first == "nd")
+				{
+					string IDNodeCami = xmlElements[element].fills[i].second[0].second;
+					int j = 0;
+					while(auxNodesCami[j].first != IDNodeCami)
+					{
+						j++;
+						if (j == 2378) //Para depurar
+						{
+							int c = 0;
+						}
+					}
+					auxCami->addCoordenades(auxNodesCami[j].second);
+				}
+			}
+			m_camins.push_back(auxCami);
 		}
 	}
 }

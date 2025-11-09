@@ -7,7 +7,7 @@
 class CamiBase {
 	public:
 		virtual std::vector<Coordinate> getCamiCoords() = 0;
-		
+		virtual void addCoordenades(Coordinate coord) = 0;
 		
 		
 };
