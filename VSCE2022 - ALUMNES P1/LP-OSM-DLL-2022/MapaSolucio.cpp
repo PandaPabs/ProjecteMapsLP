@@ -21,7 +21,7 @@ void MapaSolucio::getCamins(std::vector<CamiBase*>& pi) {
 	//CamiSolucio* caminet = new CamiSolucio;
 	//pi.push_back(caminet);
 
-	pi = m_camins;
+	//pi = m_camins;
 }
 
 void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
@@ -30,12 +30,7 @@ void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 	{
 		if(xmlElements[element].id_element == "node")
 		{
-			int indexTipusPI = 0;
-			while (xmlElements[element].fills[indexTipusPI].second[0].second != "shop" && xmlElements[element].fills[indexTipusPI].second[1].second != "restaurant" /* && xmlElements[element].fills[indexTipusPI].second[0].second != "highway" && xmlElements[element].fills[indexTipusPI].second[0].second != "public_transport" && xmlElements[element].fills[indexTipusPI].second[0].second != "entrance" && xmlElements[element].fills[indexTipusPI].second[0].second != "access"*/)
-			{
-				indexTipusPI++;
-			}
-
+			//Calculo las Coordenadas
 			double lat;
 			double lon;
 			for (int i = 0; i < xmlElements[element].atributs.size(); i++)
@@ -51,77 +46,127 @@ void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 			}
 			Coordinate coord = { lat, lon };
 
-			string name = "";
-			if (xmlElements[element].fills[indexTipusPI].second[0].second == "shop")
-			{//Shop
-				string shopType = "";
-				string openingHours = "";
-				bool movReduida = false;
+			//Miro si es un Camino
+			bool esCami = false;
+			if (xmlElements[element].fills.size() == 0)
+			{
+				esCami = true;
+			}
+			else
+			{
+				bool teNom = false;
 				for (int i = 0; i < xmlElements[element].fills.size(); i++)
 				{
-					if (xmlElements[element].fills[i].second[0].second == "name")
+					if(xmlElements[element].fills[i].first != "#text")
 					{
-						name = xmlElements[element].fills[i].second[1].second;
-					}
-					else if (xmlElements[element].fills[i].second[0].second == "shop")
-					{
-						shopType = xmlElements[element].fills[i].second[1].second;
-					}
-					else if (xmlElements[element].fills[i].second[0].second == "opening_hours")
-					{
-						openingHours = xmlElements[element].fills[i].second[1].second;
-					}					
-					else if(xmlElements[element].fills[i].second[0].second == "wheelchair")
-					{
-						if (xmlElements[element].fills[i].second[1].second == "yes")
+						if (xmlElements[element].fills[i].second[0].second == "highway" || xmlElements[element].fills[i].second[0].second == "public_transport" || xmlElements[element].fills[i].second[0].second == "entrance" || xmlElements[element].fills[i].second[0].second == "access")
 						{
-							movReduida = true;
+							esCami = true;
 						}
-						else
+						if (xmlElements[element].fills[i].second[0].second == "name")
 						{
-							movReduida = false;
+							teNom = true;
 						}
 					}
 				}
-				m_puntsInteres.push_back(new PuntDeInteresBotigaSolucio(name, coord, shopType, openingHours, movReduida));
-			}
-			else if(xmlElements[element].fills[indexTipusPI].second[0].second == "amenity" && xmlElements[element].fills[indexTipusPI].second[1].second == "restaurant")
-			{//Restaurant
-				bool movReduida = false;
-				string cuisine = "";
-				for (int i = 0; i < xmlElements[element].fills.size(); i++)
+				if(esCami == false)
 				{
-					if (xmlElements[element].fills[i].second[0].second == "name")
-					{
-						name = xmlElements[element].fills[i].second[1].second;
-					}
-					else if (xmlElements[element].fills[i].second[0].second == "wheelchair")
-					{
-						if (xmlElements[element].fills[i].second[1].second == "yes")
-						{
-							movReduida = true;
-						}
-						else
-						{
-							movReduida = false;
-						}
-					}
-					else if (xmlElements[element].fills[i].second[0].second == "cuisine")
-					{
-						cuisine = xmlElements[element].fills[i].second[1].second;
-					}
+					esCami = !teNom;
 				}
-				m_puntsInteres.push_back(new PuntDeInteresRestaurantSolucio(name, coord, movReduida, cuisine));
 			}
-			else //if(xmlElements[element].fills.size() == 0 || xmlElements[element].fills[indexTipusPI].second[0].second == "highway" || xmlElements[element].fills[indexTipusPI].second[0].second == "public_transport" || xmlElements[element].fills[indexTipusPI].second[0].second == "entrance" || xmlElements[element].fills[indexTipusPI].second[0].second == "access")
-			{//Cami
+
+
+			if (esCami == true)
+			{
 				m_camins.addCoordenades(coord);
 			}
-			
-		}
-		else if (xmlElements[element].id_element == "way")
-		{
+			else
+			{
+				int indexTipusPI = 0;
+				while (xmlElements[element].fills.size() != indexTipusPI)
+				{
+					if (xmlElements[element].fills[indexTipusPI].first != "#text")
+					{
+						if (xmlElements[element].fills[indexTipusPI].second[0].second == "shop" || xmlElements[element].fills[indexTipusPI].second[0].second == "cuisine")
+						{
+							break;
+						}
+					}
+					indexTipusPI++;
+				}
 
+				string name = "";
+				if (xmlElements[element].fills.size() != indexTipusPI)
+				{
+					if (xmlElements[element].fills[indexTipusPI].second[0].second == "shop")
+					{//Shop
+						string shopType = "";
+						string openingHours = "";
+						bool movReduida = false;
+						for (int i = 0; i < xmlElements[element].fills.size(); i++)
+						{
+							if (xmlElements[element].fills[i].first != "#text")
+							{
+								if (xmlElements[element].fills[i].second[0].second == "name")
+								{
+									name = xmlElements[element].fills[i].second[1].second;
+								}
+								else if (xmlElements[element].fills[i].second[0].second == "shop")
+								{
+									shopType = xmlElements[element].fills[i].second[1].second;
+								}
+								else if (xmlElements[element].fills[i].second[0].second == "opening_hours")
+								{
+									openingHours = xmlElements[element].fills[i].second[1].second;
+								}
+								else if (xmlElements[element].fills[i].second[0].second == "wheelchair")
+								{
+									if (xmlElements[element].fills[i].second[1].second == "yes")
+									{
+										movReduida = true;
+									}
+									else
+									{
+										movReduida = false;
+									}
+								}
+							}
+						}
+						m_puntsInteres.push_back(new PuntDeInteresBotigaSolucio(name, coord, shopType, openingHours, movReduida));
+					}
+					else if (/*xmlElements[element].fills[indexTipusPI].second[0].second == "amenity" && xmlElements[element].fills[indexTipusPI].second[1].second == "restaurant"*/ xmlElements[element].fills[indexTipusPI].second[0].second == "cuisine")
+					{//Restaurant
+						bool movReduida = false;
+						string cuisine = "";
+						for (int i = 0; i < xmlElements[element].fills.size(); i++)
+						{
+							if (xmlElements[element].fills[i].first != "#text")
+							{
+								if (xmlElements[element].fills[i].second[0].second == "name")
+								{
+									name = xmlElements[element].fills[i].second[1].second;
+								}
+								else if (xmlElements[element].fills[i].second[0].second == "wheelchair")
+								{
+									if (xmlElements[element].fills[i].second[1].second == "yes")
+									{
+										movReduida = true;
+									}
+									else
+									{
+										movReduida = false;
+									}
+								}
+								else if (xmlElements[element].fills[i].second[0].second == "cuisine")
+								{
+									cuisine = xmlElements[element].fills[i].second[1].second;
+								}
+							}
+						}
+						m_puntsInteres.push_back(new PuntDeInteresRestaurantSolucio(name, coord, movReduida, cuisine));
+					}
+				}
+			}
 		}
 	}
 }
