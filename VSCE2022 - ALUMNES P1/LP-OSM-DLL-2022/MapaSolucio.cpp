@@ -27,6 +27,8 @@ void MapaSolucio::getCamins(std::vector<CamiBase*>& pi) {
 
 void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 {
+	m_camins.resize(0);
+	m_puntsInteres.resize(0);
 	std::vector<int> debug;
 	std::vector<pair<string, Coordinate>> auxNodesCami;
 	for (int element = 0; element < xmlElements.size(); element++)
