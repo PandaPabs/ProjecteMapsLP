@@ -87,10 +87,10 @@ void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 				}
 			}
 
+			auxNodesCami.push_back({id, coord});
 
 			if (esCami == true)
 			{
-				auxNodesCami.push_back({id, coord});
 			}
 			else
 			{
