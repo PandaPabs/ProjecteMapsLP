@@ -14,6 +14,8 @@ public:
 	void getCamins(vector<CamiBase*>& pi) override;
 	void parsejaXmlElements(vector<XmlElement>& xmlElements) override;
 
+	CamiBase* buscaCamiMesCurt(PuntDeInteresBase* desde, PuntDeInteresBase* a);
+
 private:
 	vector<PuntDeInteresBase*> m_puntsInteres;
 	vector<CamiBase*> m_camins;

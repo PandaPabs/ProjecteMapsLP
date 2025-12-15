@@ -229,3 +229,8 @@ void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 		}
 	}
 }
+
+CamiBase* MapaSolucio::buscaCamiMesCurt(PuntDeInteresBase* desde, PuntDeInteresBase* a) {
+	// TODO IMPLEMENTACIO DE LA SEGONA PART
+	return nullptr;
+}
