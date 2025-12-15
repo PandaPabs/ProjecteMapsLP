@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\pablo\\Desktop\\ProjecteLP\\VSCE2022 - ALUMNES P1\\",
+  "WorkspaceRootPath": "C:\\VisualStudioProjects\\Ejercicios_LP\\Proyecto\\ProjecteMapsLP\\VSCE2022 - ALUMNES P1\\",
   "Documents": [],
   "DocumentGroupContainers": [
     {
@@ -13,7 +13,11 @@
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+              "Name": "ST:1:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             }
           ]
         }

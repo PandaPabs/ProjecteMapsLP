@@ -2,13 +2,20 @@
 #include "pch.h"
 #include "MapaBase.h"
 #include "CamiSolucio.h"
+#include "GrafSolucio.h"
 using namespace std;
 
 class MapaSolucio: public MapaBase
 {
 public:
-	MapaSolucio() {}
-	~MapaSolucio() {}
+	MapaSolucio()
+	{
+
+	}
+	~MapaSolucio()
+	{
+
+	}
 
 	void getPdis(vector<PuntDeInteresBase*>& pdis) override;
 	void getCamins(vector<CamiBase*>& pi) override;
@@ -19,5 +26,5 @@ public:
 private:
 	vector<PuntDeInteresBase*> m_puntsInteres;
 	vector<CamiBase*> m_camins;
-	//CamiSolucio m_camins; 
+	GrafSolucio m_graf;
 };
