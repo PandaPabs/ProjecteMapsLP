@@ -1,6 +1,39 @@
 #include "pch.h"
 #include "GrafSolucio.h"
 
+
+int GrafSolucio::afegirNode(const Coordinate& coord) 
+{
+	for (int i = 0; i < m_nodes.size(); i++) //Mirar si ja està
+	{
+		if (m_nodes[i].lat == coord.lat && m_nodes[i].lon == coord.lon) 
+		{
+			return i; // si ja està retornes el seu index
+		}
+	}
+	m_nodes.push_back(coord); // si no està l'afegeixes
+	int nNodes = m_nodes.size();
+	m_matrAdj.resize(nNodes); // fer resize files
+
+	for (int i = 0; i < nNodes; i++) 
+	{
+		m_matrAdj[i].resize(nNodes, DBL_MAX); // resize columnes
+	}
+
+	m_matrAdj[nNodes - 1][nNodes - 1] = 0; // el nou node te una distancia de 0 amb ell mateix
+
+	return nNodes - 1; // retorna el nou index
+}
+
+void GrafSolucio::afegirAresta(int node1, int node2) 
+{
+	Util util;
+	double d = util.DistanciaHaversine(m_nodes[node1], m_nodes[node2]);
+	m_matrAdj[node1][node2] = d;
+	m_matrAdj[node2][node1] = d;
+}
+
+
 void GrafSolucio::inicialitza(vector<CamiBase*> camins)
 {
 	//inicialitza m_nodes
@@ -9,33 +42,20 @@ void GrafSolucio::inicialitza(vector<CamiBase*> camins)
 		vector<Coordinate> auxCoords = camins[i]->getCamiCoords();
 		for (int j = 0; j < auxCoords.size(); j++)
 		{
-			int k = 0;
-			while (k < m_nodes.size() && !(m_nodes[k].lat == auxCoords[j].lat && m_nodes[k].lon == auxCoords[j].lon))
-			{
-				k++;
-			}
-
-			if (k == m_nodes.size())
-			{
-				m_nodes.push_back(auxCoords[j]);
-			}
+			afegirNode(auxCoords[j]);
 		}
 	}
 
-
-
-	//inicialitza m_matrAdj
-	Util util;
-	long dist;
-	m_matrAdj.resize(m_nodes.size());
-	for (int i = 0; i < m_nodes.size(); i++)
+	//inicialitza arestes
+	for (int i = 0; i < camins.size(); i++) 
 	{
-		m_matrAdj[i].resize(m_nodes.size(), LONG_MAX);
-		for (int j = i + 1; j < m_nodes.size(); j++)
+		vector<Coordinate> coords = camins[i]->getCamiCoords();
+		for (int j = 0; j < coords.size() - 1; j++) 
 		{
-			dist = util.DistanciaHaversine(m_nodes[i], m_nodes[j]);
-			m_matrAdj[i][j] = dist;
-			m_matrAdj[j][i] = dist;
+			int nod1 = afegirNode(coords[j]);
+			int nod2 = afegirNode(coords[j + 1]);
+
+			afegirAresta(nod1, nod2);
 		}
 	}
 }

@@ -1,4 +1,3 @@
-// NEW PART 2
 #pragma once
 #include "pch.h"
 
@@ -79,6 +78,7 @@ public:
     ~BallTree() = default;
 
 private:
+    Coordinate puntMaxLlunya(const Coordinate& ref, const std::vector<Coordinate>& punts);
     BallTree* m_root;
     BallTree* m_left;
     BallTree* m_right;
