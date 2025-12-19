@@ -61,6 +61,7 @@ void GrafSolucio::inicialitza(vector<CamiBase*> camins)
 		vector<Coordinate> coords = camins[i]->getCamiCoords();
 		for (int j = 0; j < coords.size() - 1; j++) 
 		{
+			//afegirNode solo para recivir su indice
 			int nod1 = afegirNode(coords[j]);
 			int nod2 = afegirNode(coords[j + 1]);
 
