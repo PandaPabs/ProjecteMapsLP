@@ -218,9 +218,85 @@ void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 	}
 
 	m_graf.inicialitza(m_camins);
+
+	vector<Coordinate> coords;
+	for (CamiBase* cami : m_camins) {
+		vector<Coordinate> c = cami->getCamiCoords();
+		coords.insert(coords.end(), c.begin(), c.end());
+	}
+	m_ballTree.construirArbre(coords);
 }
 
+
+
+int MapaSolucio::minDistance(const vector<double>& dist, const vector<bool>& visitat) const
+{
+	// Initialize min value
+	double min = DBL_MAX;
+	int minIndex = -1;
+
+	//OMPLIR
+	for (int i = 0; i < m_graf.getNumNodes(); i++) {
+		if (dist[i] < min && !visitat[i]) {
+			minIndex = i;
+			min = dist[i];
+		}
+	}
+	return minIndex;
+}
+
+
 CamiBase* MapaSolucio::buscaCamiMesCurt(PuntDeInteresBase* desde, PuntDeInteresBase* a) {
-	// TODO IMPLEMENTACIO DE LA SEGONA PART
-	return nullptr;
+
+	Coordinate Qin = {0.0, 0.0};
+	Coordinate cOrigen = m_ballTree.nodeMesProper(desde->getCoord(), Qin, m_ballTree.getArrel());
+	Coordinate cDesti = m_ballTree.nodeMesProper(a->getCoord(), Qin, m_ballTree.getArrel());
+	int org = m_graf.getNodeId(cOrigen);
+	int dest = m_graf.getNodeId(cDesti);
+	
+	//if nodes no valids
+	if (org == -1 || dest == -1)
+		return new CamiSolucio();
+	//dikjstra
+	
+	vector<double> dist(m_graf.getNumNodes(), DBL_MAX);
+	vector<int> anterior(m_graf.getNumNodes(), -1);
+	vector<bool> visitats(m_graf.getNumNodes(), false);
+	
+	dist[org] = 0;
+	
+	double distancia;
+	int minIndex = org;
+	
+	while (minIndex != -1 && !visitats[dest]) {
+		visitats[minIndex] = true;
+		distancia = dist[minIndex];
+
+		if (distancia != DBL_MAX) {
+			for (int i = 0; i < m_graf.getNumNodes(); i++) {
+				if (i != minIndex && !visitats[i] && m_graf.getDistancia(minIndex, i) != DBL_MAX && distancia + m_graf.getDistancia(minIndex, i) < dist[i]) {
+					dist[i] = distancia + m_graf.getDistancia(minIndex, i);
+					anterior[i] = minIndex;
+				}
+			}
+		}
+		
+		minIndex = minDistance(dist, visitats);
+	}
+	
+
+	CamiSolucio* cami = new CamiSolucio();
+
+	if (dist[dest] == DBL_MAX)
+		return cami;
+
+	vector<int> camiIds;
+	for (int v = dest; v != -1; v = anterior[v])
+		camiIds.push_back(v);
+
+	reverse(camiIds.begin(), camiIds.end());
+
+	for (int id : camiIds)
+		cami->addCoordenades(m_graf.getNode(id));
+	return cami;
 }

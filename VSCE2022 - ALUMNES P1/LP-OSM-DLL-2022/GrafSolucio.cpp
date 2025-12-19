@@ -34,6 +34,15 @@ void GrafSolucio::afegirAresta(int node1, int node2)
 }
 
 
+int GrafSolucio::getNodeId(const Coordinate& node) {
+	for (int i = 0; i < m_nodes.size(); i++) {
+		if (node.lat == m_nodes[i].lat && node.lon == m_nodes[i].lon) {
+			return i;
+		}
+	}
+	return -1;
+}
+
 void GrafSolucio::inicialitza(vector<CamiBase*> camins)
 {
 	//inicialitza m_nodes
