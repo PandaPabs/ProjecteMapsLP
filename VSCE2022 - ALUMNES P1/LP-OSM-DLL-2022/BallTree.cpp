@@ -157,22 +157,33 @@ Coordinate BallTree::nodeMesProper(Coordinate targetQuery, Coordinate& Q, BallTr
         return Q;
     }
 
-    double de = util.DistanciaHaversine(targetQuery, ball->getEsquerre()->getPivot()); // distancia al pivot de la izquierda
-
-    double dd = util.DistanciaHaversine(targetQuery, ball->getDreta()->getPivot()); //
-
-    if (de < dd)
+    if (ball->getEsquerre() != nullptr && ball->getDreta() != nullptr)
     {
-        nodeMesProper(targetQuery, Q, ball->getEsquerre());
-        nodeMesProper(targetQuery, Q, ball->getDreta());
+        double de = util.DistanciaHaversine(targetQuery, ball->getEsquerre()->getPivot());
+        double dd = util.DistanciaHaversine(targetQuery, ball->getDreta()->getPivot());
+
+        if (de < dd)
+        {
+            Q = nodeMesProper(targetQuery, Q, ball->getEsquerre());
+            d2 = util.DistanciaHaversine(targetQuery, Q);  // Actualiza d2
+            Q = nodeMesProper(targetQuery, Q, ball->getDreta());
+        }
+        else
+        {
+            Q = nodeMesProper(targetQuery, Q, ball->getDreta());
+            d2 = util.DistanciaHaversine(targetQuery, Q);  // Actualiza d2
+            Q = nodeMesProper(targetQuery, Q, ball->getEsquerre());
+        }
     }
-    else
-    {
-        nodeMesProper(targetQuery, Q, ball->getDreta());
-        nodeMesProper(targetQuery, Q, ball->getEsquerre());
+    
+    else if (ball->getEsquerre() != nullptr) {
+        Q = nodeMesProper(targetQuery, Q, ball->getEsquerre());
+    }
+    else if (ball->getDreta() != nullptr) {
+        Q = nodeMesProper(targetQuery, Q, ball->getDreta());
     }
 
-    return Q; 
+    return Q;
 }
 
 
