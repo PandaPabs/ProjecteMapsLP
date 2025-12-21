@@ -28,6 +28,11 @@ class MapaRender {
 
         std::vector<PoiBridge> renderPois();
         std::vector<WayBridge> renderWays();
+
+        // NEW PART 2
+        PuntDeInteresBase* getPoiByIdx(int idx);
+        // NEW PART 2
+        std::vector<Coordinate> shortestPath(PuntDeInteresBase* from, PuntDeInteresBase* to);
 };
 
 #endif //defined(_MSC_VER)

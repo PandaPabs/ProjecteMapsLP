@@ -91,5 +91,26 @@ void MapaRender::construeixOSM(const std::string& path_map) {
     }
 }
 
+// NEW PART 2
+// DO NOT TOUCH THIS
+PuntDeInteresBase * MapaRender::getPoiByIdx(int idx) {
+    std::vector<PuntDeInteresBase*> vec_puntsDeInteres = {};
+    this->m_mapaBase->getPdis(vec_puntsDeInteres);
+
+
+    if (idx < 0 || idx > vec_puntsDeInteres.size())
+        return new PuntDeInteresBase();
+
+    return vec_puntsDeInteres[idx];
+}
+
+// NEW PART 2
+// DO NOT TOUCH THIS
+std::vector<Coordinate> MapaRender::shortestPath(PuntDeInteresBase* from, PuntDeInteresBase* to)
+{
+    CamiBase* way = m_mapaBase->buscaCamiMesCurt(from, to);
+    return way->getCamiCoords();
+}
+
 
 #endif //defined(_MSC_VER)
