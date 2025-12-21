@@ -58,12 +58,8 @@ void BallTree::construirArbre(const std::vector<Coordinate>& coordenades) {
 
 
     //posem el punt mig de pivot
-    double sumaLat = 0.0, sumaLon = 0.0;
-    for (const auto& co : uniques) {
-        sumaLat += co.lat;
-        sumaLon += co.lon;
-    }
-    m_pivot = { sumaLat / uniques.size(), sumaLon / uniques.size() };
+   
+    m_pivot = util.calcularPuntCentral(uniques);
 
 
     Coordinate A = puntMaxLlunya(m_pivot, uniques); // punt més llunya al pivot

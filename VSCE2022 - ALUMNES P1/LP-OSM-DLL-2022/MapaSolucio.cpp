@@ -255,9 +255,19 @@ int MapaSolucio::minDistance(const vector<double>& dist, const vector<bool>& vis
 CamiBase* MapaSolucio::buscaCamiMesCurt(PuntDeInteresBase* desde, PuntDeInteresBase* a) {
 	Util::escriuEnMonitor("He entrado en me como mi caca");
 
-	Coordinate Qin = { 100000.0, 1000000.0 };
+	Coordinate Qin;
+	vector<list<Coordinate>> recorrido;
+	m_ballTree.preOrdre(recorrido);
+
+	if (!recorrido.empty() && !recorrido[0].empty()) {
+		Qin = recorrido[0].front();
+	}
+	else {
+		Qin = { 0.0,0.0 };
+	}
 	Coordinate cOrigen = m_ballTree.nodeMesProper(desde->getCoord(), Qin, m_ballTree.getArrel());
-	Qin = { 100000.0, 10000000.0 };
+	
+	Qin = cOrigen;
 	Coordinate cDesti = m_ballTree.nodeMesProper(a->getCoord(), Qin, m_ballTree.getArrel());
 	
 
@@ -289,7 +299,7 @@ CamiBase* MapaSolucio::buscaCamiMesCurt(PuntDeInteresBase* desde, PuntDeInteresB
 	vector<bool> visitados(n, false);
 
 	distancias[nodoOrigen] = 0.0;
-	anterior[nodoOrigen] = nodoOrigen;
+	anterior[nodoOrigen] = -1;
 	// Algoritmo Dijkstra
 	for (int count = 0; count < n - 1; count++) {
 		int u = minDistance(distancias, visitados);
