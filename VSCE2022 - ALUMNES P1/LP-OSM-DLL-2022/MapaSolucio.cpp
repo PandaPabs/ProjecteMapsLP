@@ -191,7 +191,7 @@ void MapaSolucio::parsejaXmlElements(std::vector<XmlElement>& xmlElements)
 			{
 				int a = 0;
 			}
-			CamiBase* auxCami = new CamiSolucio();
+			CamiSolucio* auxCami = new CamiSolucio();
 			for (int i = 0; i < xmlElements[element].fills.size(); i++)
 			{
 				if (i == 7) //Para depurar
@@ -253,7 +253,6 @@ int MapaSolucio::minDistance(const vector<double>& dist, const vector<bool>& vis
 
 
 CamiBase* MapaSolucio::buscaCamiMesCurt(PuntDeInteresBase* desde, PuntDeInteresBase* a) {
-	Util::escriuEnMonitor("He entrado en me como mi caca");
 
 	Coordinate Qin;
 	vector<list<Coordinate>> recorrido;
@@ -271,23 +270,16 @@ CamiBase* MapaSolucio::buscaCamiMesCurt(PuntDeInteresBase* desde, PuntDeInteresB
 	Coordinate cDesti = m_ballTree.nodeMesProper(a->getCoord(), Qin, m_ballTree.getArrel());
 	
 
-	Util::escriuEnMonitor("Punto origen: " + desde->getName());
-	Util::escriuEnMonitor("Punto destino: " + a->getName());
-	Util::escriuEnMonitor("Nodo camino origen encontrado: " + to_string(cOrigen.lat) + ", " + to_string(cOrigen.lon));
-	Util::escriuEnMonitor("Nodo camino destino encontrado: " + to_string(cDesti.lat) + ", " + to_string(cDesti.lon));
-
 	int nodoOrigen = m_graf.getNodeId(cOrigen);
 	int nodoDestino = m_graf.getNodeId(cDesti);
 
 
 	//if nodes no valids
 	if (nodoOrigen == -1 || nodoDestino == -1) {
-		Util::escriuEnMonitor("Error: nodos origen o destino no encontrados en el grafo");
 		return new CamiSolucio();
 
 	}
 	if (nodoOrigen >= m_graf.getNumNodes() || nodoDestino >= m_graf.getNumNodes()) {
-		Util::escriuEnMonitor("Error: índices fuera de rango");
 		return new CamiSolucio();
 	}
 
@@ -329,7 +321,6 @@ CamiBase* MapaSolucio::buscaCamiMesCurt(PuntDeInteresBase* desde, PuntDeInteresB
 	CamiSolucio* cami = new CamiSolucio();
 
 	if (distancias[nodoDestino] >= DBL_MAX - 1) {
-		Util::escriuEnMonitor("No se encontró camino entre los puntos");
 		return new CamiSolucio();
 	}
 
@@ -345,7 +336,5 @@ CamiBase* MapaSolucio::buscaCamiMesCurt(PuntDeInteresBase* desde, PuntDeInteresB
 	for (int id : camiIds) {
 		cami->addCoordenades(m_graf.getNode(id));
 	}
-
-	Util::escriuEnMonitor("Camino encontrado con " + to_string(camiIds.size()) + " nodos");
 	return cami;
 }
